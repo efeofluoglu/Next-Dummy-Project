@@ -1,34 +1,34 @@
-import { Inter } from 'next/font/google'
-import { createClient } from 'contentful';
-import { TeamMember } from '../contentfulTypes';
+interface Post {
+  id: number
+  title: string
+}
 
-// export async function getStaticProps() {
-//   const client = createClient({
-//     space: process.env.CONTENTFUL_SPACE_ID || '',
-//     accessToken: process.env.CONTENTFUL_ACCESS_KEY || '',
-//   });
+interface PostsProps {
+  posts: Post[]
+}
 
-//   const res = await client.getEntries<TeamMember>({
-//     content_type: 'teamMember',
-//   });
+export async function getStaticProps() {
+  // Fetch posts from the JSONPlaceholder API
+  const response = await fetch('https://jsonplaceholder.typicode.com/posts')
+  const posts = await response.json()
 
-//   return {
-//     props: {
-//       members: res.items.map((i) => i.fields),
-//     },
-//   };
-// }
-// interface TeamMemberTableProps {
-//   members: TeamMember[];
-// }
-export default function Home() {
+  return {
+    props: {
+      posts,
+    },
+  }
+}
 
-  
+export default function Home({ posts }: PostsProps) {
+
   return (
-    <>
-      <div>
-        hello
-      </div>
-    </>
+    <div>
+      <h1>Posts</h1>
+      <ul>
+        {posts.map((post) => (
+          <li key={post.id}>{post.title}</li>
+        ))}
+      </ul>
+    </div>
   )
 }
