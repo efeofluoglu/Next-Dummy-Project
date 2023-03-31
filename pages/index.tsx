@@ -1,34 +1,40 @@
+import { createClient } from "contentful";
+
 interface Post {
-  id: number
-  title: string
+  name: string;
 }
 
 interface PostsProps {
-  posts: Post[]
+  posts: Post[];
 }
 
 export async function getStaticProps() {
   // Fetch posts from the JSONPlaceholder API
-  const response = await fetch('https://jsonplaceholder.typicode.com/posts')
-  const posts = await response.json()
+  const client = createClient({
+    space: process.env.CONTENTFUL_SPACE_ID || "",
+    accessToken: process.env.CONTENTFUL_ACCESS_KEY || "",
+  });
+
+  const res = await client.getEntries({
+    content_type: "dummyContent",
+  });
 
   return {
     props: {
-      posts,
+      posts: res.items.map((i) => i.fields)
     },
-  }
+  };
 }
 
 export default function Home({ posts }: PostsProps) {
-
   return (
     <div>
       <h1>Posts</h1>
       <ul>
-        {posts.map((post) => (
-          <li key={post.id}>{post.title}</li>
+        {posts.map((post, index) => (
+          <li key={index}>{post.name}</li>
         ))}
       </ul>
     </div>
-  )
+  );
 }
