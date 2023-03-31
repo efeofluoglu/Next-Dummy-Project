@@ -1,11 +1,11 @@
+import { TeamMember } from "@/contentfulTypes";
 import { createClient } from "contentful";
+import Image from 'next/image';
 
-interface Post {
-  name: string;
-}
+
 
 interface PostsProps {
-  posts: Post[];
+  posts: TeamMember[];
 }
 
 export async function getStaticProps() {
@@ -15,12 +15,12 @@ export async function getStaticProps() {
   });
 
   const res = await client.getEntries({
-    content_type: "dummyContent",
+    content_type: "teamMember",
   });
 
   return {
     props: {
-      posts: res.items.map((i) => i.fields)
+      posts: res.items.map((i) => i.fields),
     },
   };
 }
@@ -31,7 +31,15 @@ export default function Home({ posts }: PostsProps) {
       <h1>Posts</h1>
       <ul>
         {posts.map((post, index) => (
-          <li key={index}>{post.name}</li>
+          <li key={index}>
+            <h1>>{post.name}</h1>
+            <Image
+        src={'https://' + post.picture?.fields.file.url}
+        width={275}
+        height={250}
+        alt=""
+        className="rounded-t-xl"
+      /></li>
         ))}
       </ul>
     </div>
