@@ -32,7 +32,7 @@ export default function Home({ posts }: PostsProps) {
       <ul>
         {posts.map((post, index) => (
           <li key={index}>
-            <h1>>{post.name}</h1>
+            <h1>{post.name}</h1>
             <Image
         src={'https://' + post.picture?.fields.file.url}
         width={275}
